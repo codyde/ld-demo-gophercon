@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gophercon-2
+  namespace: gophercon-2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gophercon-2
+  namespace: gophercon-2
+  labels:
+    app: gophercon-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gophercon-2
+  template:
+    metadata:
+      labels:
+        app: gophercon-2
+    spec:
+      containers:
+        - name: gophercon-2
+          image: 955116512041.dkr.ecr.us-west-2.amazonaws.com/ld-demo-gophercon-2-myappimage-vnyaxzkotgoa:latest 
+          imagePullPolicy: Always
+          ports:
+            - name: web
+              containerPort: 3000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gophercon-2
+  name: gophercon-lb
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: gophercon-2
+  type: LoadBalancer
